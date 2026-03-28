@@ -12,11 +12,12 @@ import {
   ReceiptText,
   Scale,
   Settings,
+  Users,
   UsersRound,
 } from "lucide-react";
 
-export const breadcrumbText = "Legal Project Managamnst";
-export const pageTitle = "Clients";
+export const breadcrumbText = "Legal Project Management";
+export const pageTitle = "Employees";
 
 export const sidebarItems: LucideIcon[] = [
   LayoutPanelLeft,
@@ -35,12 +36,32 @@ export const footerTabs: Array<{ label: string; icon: LucideIcon; active?: boole
   { label: "Documents", icon: FolderOpen },
   { label: "Clients", icon: UsersRound, active: true },
   { label: "Billing", icon: ReceiptText },
+  { label: "Employees", icon: Users },
+];
+
+export const serviceTypes = [
+  "Negotiations",
+  "Contracts",
+  "Meetings",
+  "Invoices",
+  "Power of Attorney",
+  "Contract Review",
+];
+
+export const nationalities = [
+  "Saudi",
+  "Egyptian",
+  "Emirati",
+  "Jordanian",
+  "Kuwaiti",
+  "Bahraini",
+  "Omani",
 ];
 
 export const brandIcon = Scale;
 export const currentUserName = "Ahmed";
 
-export const licenseBanner = {
-  message: "Your license as a lawyer expires on 12-05-2025. Please renew it.",
-  cta: "Renew Now",
-};
+export const statusMessages = {
+  success: "The client was successfully added",
+  error: "Failed to add customer",
+} as const;

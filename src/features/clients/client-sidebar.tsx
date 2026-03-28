@@ -4,28 +4,32 @@ import { brandIcon as BrandIcon, sidebarItems } from "@/features/clients/data";
 
 export function ClientSidebar() {
   return (
-    <div className="flex h-screen w-full flex-col items-center py-[18px]">
-      <div className="flex h-11 w-11 items-center justify-center">
-        {/* Logo area */}
-        <BrandIcon className="h-[22px] w-[22px] stroke-[1.75] text-[#1c1c1c]" />
+    <div className="flex h-full w-full flex-col items-center py-[14px] md:py-[18px]">
+      <div className="flex h-10 w-10 items-center justify-center">
+        <BrandIcon className="h-[20px] w-[20px] stroke-[1.75] text-[#1c1c1c]" />
       </div>
 
-      <div className="mt-4 flex flex-1 flex-col items-center gap-[10px]">
+      <div className="mt-3 flex flex-1 flex-col items-center gap-[8px] md:mt-4 md:gap-[10px]">
         {sidebarItems.map((Icon, index) => (
           <Button
             key={`${Icon.displayName ?? Icon.name}-${index}`}
             variant="ghost"
             size="icon"
-            className="h-10 w-10 text-[#4a4a4a] hover:bg-neutral-100"
+            className="h-9 w-9 rounded-[10px] text-[#4a4a4a] hover:bg-neutral-100"
             type="button"
           >
-            <Icon className="h-[20px] w-[20px] stroke-[1.8]" />
+            <Icon className="h-[18px] w-[18px] stroke-[1.85]" />
           </Button>
         ))}
       </div>
 
-      <Button variant="ghost" size="icon" className="mb-2 h-10 w-10 text-[#4a4a4a]" type="button">
-        <CircleUserRound className="h-[20px] w-[20px] stroke-[1.8]" />
+      <Button
+        variant="ghost"
+        size="icon"
+        className="mb-1 h-9 w-9 rounded-[10px] text-[#4a4a4a] hover:bg-neutral-100"
+        type="button"
+      >
+        <CircleUserRound className="h-[18px] w-[18px] stroke-[1.85]" />
       </Button>
     </div>
   );
