@@ -1,0 +1,8 @@
+node_modules
+.gemini
+dist
+.env
+.DS_Store
+*.local
+tmp
+.vscode
