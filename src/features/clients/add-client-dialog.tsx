@@ -63,7 +63,7 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="flex h-full max-h-[90vh] w-[95vw] max-w-[424px] flex-col overflow-y-auto rounded-lg border border-[#efebe4] p-6 sm:h-[884px] sm:max-h-[96vh]">
+      <DialogContent className="flex h-full max-h-[90vh] w-[95vw] max-w-[424px] flex-col overflow-y-auto scrollbar-hide rounded-lg border border-[#efebe4] p-6 sm:h-[884px] sm:max-h-[96vh]">
         <div className="mb-1 flex shrink-0 items-center justify-between">
           <DialogTitle className={cn("text-[18px] font-semibold text-[#1a1a1a]", typography.title)}>
             Add client
