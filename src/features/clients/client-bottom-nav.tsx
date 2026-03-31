@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 
 export function ClientBottomNav() {
   return (
-    <nav className="flex max-w-[min(100vw-32px,648px)] items-center gap-1.5 overflow-x-auto rounded-[16px] bg-white px-3 py-3 shadow-nav">
+    <nav className="scrollbar-hide flex max-w-[min(100vw-32px,648px)] items-center gap-1.5 overflow-x-auto rounded-[16px] bg-white px-3 py-3 shadow-nav">
       {footerTabs.map(({ label, icon: Icon, active }) => (
         <button
           key={label}
