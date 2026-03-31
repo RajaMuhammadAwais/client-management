@@ -39,7 +39,6 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
   const phoneRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
   const dobButtonRef = useRef<HTMLButtonElement>(null);
-  const dobModeMenuRef = useRef<HTMLDivElement>(null);
   const calendarRef = useRef<HTMLDivElement>(null);
   const nationalityButtonRef = useRef<HTMLButtonElement>(null);
 
