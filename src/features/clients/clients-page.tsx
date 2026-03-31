@@ -22,20 +22,31 @@ import { cn } from "@/lib/utils";
 
 function TopBar() {
   return (
-    <div className="flex h-full items-center justify-between gap-4">
-      <div className={cn("flex flex-wrap items-center gap-[8px] text-[#6f6f6f]", typography.secondary)}>
-        <span>{breadcrumbText}</span>
-        <ChevronRight className="h-[12px] w-[12px] stroke-[1.8]" />
-        <span className="font-semibold text-[#1a1a1a]">{pageTitle}</span>
+    <div className="flex h-full w-full min-w-0 items-center justify-between gap-4 py-2">
+      <div
+        className={cn(
+          "flex min-w-0 items-center gap-[16px] overflow-hidden text-[#838383]",
+          typography.secondary,
+        )}
+      >
+        <span className="truncate">{breadcrumbText}</span>
+        <ChevronRight className="h-[14px] w-[14px] shrink-0 stroke-[2] text-[#838383]" />
+        <span className="truncate font-semibold text-[#1a1a1a]">{pageTitle}</span>
       </div>
 
-      <div className="flex items-center gap-4 text-[#1a1a1a]">
-        <button type="button" className="p-1">
-          <Bell className="h-[19px] w-[19px] stroke-[1.8]" />
+      <div className="flex shrink-0 items-center justify-end gap-[32px] text-[#1a1a1a]">
+        <button
+          type="button"
+          className="flex items-center justify-center transition-colors hover:text-black/70"
+          aria-label="Notifications"
+        >
+          <Bell className="h-[22px] w-[22px] stroke-[1.8]" />
         </button>
-        <div className="flex items-center gap-2">
-          <UserRound className="h-[19px] w-[19px] stroke-[1.8]" />
-          <span className={cn("font-semibold", typography.body)}>{currentUserName}</span>
+        <div className="flex items-center gap-[12px]">
+          <UserRound className="h-[22px] w-[22px] stroke-[1.8]" />
+          <span className={cn("whitespace-nowrap font-semibold text-[#1a1a1a]", typography.body)}>
+            {currentUserName}
+          </span>
         </div>
       </div>
     </div>
@@ -44,14 +55,21 @@ function TopBar() {
 
 function Pagination() {
   return (
-    <div className="mt-8 flex justify-end">
-      <div className="flex items-center overflow-hidden rounded-[8px] border border-[#efebe4] bg-white">
+    <div className="mt-6 flex justify-center md:mt-8 md:justify-end">
+      <div className="flex max-w-full items-center overflow-x-auto rounded-[8px] border border-[#efebe4] bg-white">
+        <button
+          type="button"
+          className="flex h-9 w-9 items-center justify-center border-r border-[#efebe4] text-[#6f6f6f] hover:bg-neutral-50"
+        >
+          <ChevronLeft className="h-4 w-4 stroke-[2]" />
+        </button>
         {[1, 2, 3, 4, 5].map((page) => (
           <button
             key={page}
             type="button"
+            aria-current={page === 3 ? "page" : undefined}
             className={cn(
-              "flex h-9 w-9 items-center justify-center border-r border-[#efebe4] font-medium transition-colors last:border-r-0",
+              "flex h-9 w-9 items-center justify-center border-r border-[#efebe4] font-medium transition-colors",
               typography.body,
               page === 3 ? "bg-neutral-50 text-black" : "text-[#6f6f6f] hover:bg-neutral-50",
             )}
@@ -61,7 +79,7 @@ function Pagination() {
         ))}
         <button
           type="button"
-          className="flex h-9 w-9 items-center justify-center border-l border-[#efebe4] text-[#6f6f6f] hover:bg-neutral-50"
+          className="flex h-9 w-9 items-center justify-center text-[#6f6f6f] hover:bg-neutral-50"
         >
           <ChevronRight className="h-4 w-4 stroke-[2]" />
         </button>
@@ -91,7 +109,9 @@ function StatusBanner({ banner }: { banner: BannerState }) {
       ) : (
         <CircleCheck className="h-4 w-4 shrink-0 stroke-[1.9]" />
       )}
-      <p className={cn("font-medium", typography.body)}>{banner.message}</p>
+      <p className={cn("font-medium", typography.body)} aria-live="polite">
+        {banner.message}
+      </p>
     </div>
   );
 }
@@ -110,13 +130,14 @@ export function ClientsPage() {
   return (
     <>
       <AppShell sidebar={<ClientSidebar />} topbar={<TopBar />} bottomBar={<ClientBottomNav />}>
-        <div className="px-[18px] pt-[12px] md:px-[26px]">
+        <div className="px-3 pt-3 sm:px-4 md:px-[26px]">
           <div className="space-y-3">
             <StatusBanner banner={banner} />
 
-            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-              <div className="w-full md:max-w-[348px]">
+            <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+              <div className="w-full lg:max-w-[348px]">
                 <Input
+                  type="search"
                   placeholder="Looking for a client..."
                   className={cn(
                     "h-[36px] rounded-[8px] border-[#efebe4] bg-white px-[12px] text-[13px] placeholder:text-[13px] placeholder:text-[#9c9c9c]",
@@ -126,11 +147,11 @@ export function ClientsPage() {
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-[8px]">
+              <div className="flex flex-col gap-[8px] sm:flex-row sm:items-center sm:justify-end">
                 <Button
                   type="button"
                   className={cn(
-                    "h-[36px] min-w-[149px] gap-1.5 rounded-[8px] bg-black px-[16px] font-medium text-white hover:bg-black/90",
+                    "h-[36px] w-full min-w-[149px] gap-1.5 rounded-[8px] bg-black px-[16px] font-medium text-white hover:bg-black/90 sm:w-auto",
                     typography.body,
                   )}
                   onClick={() => setAddClientOpen(true)}
@@ -138,7 +159,9 @@ export function ClientsPage() {
                   <Plus className="h-3.5 w-3.5 stroke-[2.2]" />
                   <span>Add Client</span>
                 </Button>
-                <FilterMenu />
+                <div className="w-full sm:w-auto">
+                  <FilterMenu />
+                </div>
               </div>
             </div>
           </div>

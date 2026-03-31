@@ -132,7 +132,7 @@ export function CalendarContent({
   }
 
   return (
-    <div className="w-[294px] select-none rounded-[10px] border border-[#efebe4] bg-white p-3 shadow-panel [direction:ltr]">
+    <div className="w-full max-w-[294px] select-none rounded-[10px] border border-[#efebe4] bg-white p-3 shadow-panel [direction:ltr]">
       <div className="mb-3 flex items-center justify-between gap-2">
         <button
           type="button"

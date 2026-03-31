@@ -5,7 +5,7 @@ import { brandIcon as BrandIcon, sidebarItems } from "@/features/clients/data";
 export function ClientSidebar() {
   return (
     <div className="flex h-full w-full flex-col items-center py-[14px] md:py-[18px]">
-      <div className="flex h-10 w-10 items-center justify-center">
+      <div className="flex h-10 w-10 items-center justify-center" aria-hidden="true">
         <BrandIcon className="h-[20px] w-[20px] stroke-[1.75] text-[#1c1c1c]" />
       </div>
 
@@ -17,6 +17,7 @@ export function ClientSidebar() {
             size="icon"
             className="h-9 w-9 rounded-[10px] text-[#4a4a4a] hover:bg-neutral-100"
             type="button"
+            aria-label={Icon.displayName ?? Icon.name}
           >
             <Icon className="h-[18px] w-[18px] stroke-[1.85]" />
           </Button>
@@ -28,6 +29,7 @@ export function ClientSidebar() {
         size="icon"
         className="mb-1 h-9 w-9 rounded-[10px] text-[#4a4a4a] hover:bg-neutral-100"
         type="button"
+        aria-label="User profile"
       >
         <CircleUserRound className="h-[18px] w-[18px] stroke-[1.85]" />
       </Button>

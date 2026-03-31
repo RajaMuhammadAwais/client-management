@@ -18,9 +18,11 @@ import { DateRangePicker } from "./date-range-picker";
 import { NumericalRangeSelector } from "./numerical-range-selector";
 
 export function FilterMenu() {
-  const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set(["Meetings"]));
+  const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set());
   const [requestRange, setRequestRange] = useState<{ start?: Date; end?: Date }>({});
   const [workingRange, setWorkingRange] = useState<{ start?: Date; end?: Date }>({});
+  const hasActiveFilters =
+    selectedServices.size > 0 || requestRange.start || requestRange.end || workingRange.start || workingRange.end;
 
   function toggleService(service: string) {
     const next = new Set(selectedServices);
@@ -39,11 +41,10 @@ export function FilterMenu() {
           variant="outline"
           size="sm"
           className={cn(
-            "h-[36px] min-w-[110px] gap-2.5 rounded-[8px] border-[#efebe4] px-4 font-medium text-[#1a1a1a] hover:bg-neutral-50",
+            "h-[36px] w-full min-w-[110px] gap-2.5 rounded-[8px] border-[#efebe4] px-4 font-medium text-[#1a1a1a] hover:bg-neutral-50 sm:w-auto",
             typography.body,
           )}
         >
-          <span>Filter</span>
           <svg
             width="18"
             height="18"
@@ -56,22 +57,23 @@ export function FilterMenu() {
           >
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
+          <span>{hasActiveFilters ? "filtering" : "Filter"}</span>
         </Button>
       </DropdownMenuTrigger>
 
       <DropdownMenuContent
         align="end"
         sideOffset={8}
-        className="w-[170px] rounded-[10px] border-[#efebe4] p-1.5 shadow-panel"
+        className="w-[min(170px,calc(100vw-24px))] rounded-[10px] border-[#efebe4] p-1.5 shadow-panel"
       >
         <DropdownMenuSub>
           <DropdownMenuSubTrigger
             className={cn("min-h-[40px] cursor-pointer rounded-[8px] px-3 outline-none focus:bg-[#f3f3f3]", typography.body)}
           >
-            Request Date
+            Date of last request
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent
-            className="w-[326px] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
+            className="w-[min(326px,calc(100vw-24px))] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
             sideOffset={10}
           >
             <div className="flex flex-col gap-3" dir="rtl">
@@ -92,7 +94,7 @@ export function FilterMenu() {
             Number of services
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent
-            className="w-[212px] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
+            className="w-[min(212px,calc(100vw-24px))] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
             sideOffset={10}
           >
             <NumericalRangeSelector />
@@ -106,7 +108,7 @@ export function FilterMenu() {
             Type of service
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent
-            className="w-[212px] rounded-[10px] border-[#efebe4] p-1.5 shadow-xl"
+            className="w-[min(212px,calc(100vw-24px))] rounded-[10px] border-[#efebe4] p-1.5 shadow-xl"
             sideOffset={10}
           >
             {serviceTypes.map((service) => (
@@ -138,7 +140,7 @@ export function FilterMenu() {
             Working period
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent
-            className="w-[326px] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
+            className="w-[min(326px,calc(100vw-24px))] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
             sideOffset={10}
           >
             <div className="flex flex-col gap-3" dir="rtl">
@@ -157,8 +159,14 @@ export function FilterMenu() {
         <DropdownMenuItem
           className={cn(
             "flex min-h-[40px] cursor-pointer items-center justify-end rounded-[8px] px-3 font-medium text-[#ff1f1f] outline-none hover:bg-red-50/50",
+            !hasActiveFilters && "pointer-events-none opacity-50",
             typography.secondary,
           )}
+          onSelect={() => {
+            setSelectedServices(new Set());
+            setRequestRange({});
+            setWorkingRange({});
+          }}
         >
           <span>Cancel all categories</span>
         </DropdownMenuItem>

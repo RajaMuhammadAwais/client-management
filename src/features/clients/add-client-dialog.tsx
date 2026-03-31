@@ -52,6 +52,9 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
     ? `${String(selectedDob.getDate()).padStart(2, "0")}-${String(selectedDob.getMonth() + 1).padStart(2, "0")}-${selectedDob.getFullYear()}`
     : "";
 
+  const closedDobPlaceholder = formattedDob || "Select date of birth";
+  const panelDobPlaceholder = formattedDob || "Specify the date of birth";
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     onSubmit(clientName.trim() ? "success" : "error");
@@ -60,8 +63,8 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-h-[min(92vh,760px)] w-[min(414px,calc(100vw-32px))] overflow-y-auto rounded-[10px] border-[#efebe4] p-4 md:p-5">
-        <div className="mb-1 flex items-center justify-between">
+      <DialogContent className="flex h-full max-h-[90vh] w-[95vw] max-w-[424px] flex-col overflow-y-auto rounded-lg border border-[#efebe4] p-6 sm:h-[884px] sm:max-h-[96vh]">
+        <div className="mb-1 flex shrink-0 items-center justify-between">
           <DialogTitle className={cn("text-[18px] font-semibold text-[#1a1a1a]", typography.title)}>
             Add client
           </DialogTitle>
@@ -70,14 +73,14 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
           Form to add a new client with their details and documents.
         </DialogDescription>
 
-        <form className="mt-2 flex flex-col gap-3" onSubmit={handleSubmit}>
+        <form className="mt-4 flex flex-1 flex-col gap-[16px] overflow-visible" onSubmit={handleSubmit}>
           <div>
             <FieldLabel required>Client name</FieldLabel>
             <Input
               value={clientName}
               placeholder="Enter Client name"
               className={cn(
-                "h-[32px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
+                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
                 typography.body,
               )}
               onChange={(event) => setClientName(sanitizeTextInput(event.target.value))}
@@ -87,78 +90,80 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
           <div>
             <FieldLabel>Date of birth</FieldLabel>
             <div className="relative">
-              <div className="flex h-[32px] w-full items-center rounded-[7px] border border-[#efebe4] bg-white text-[13px]">
-                <button
-                  type="button"
-                  className="flex h-full min-w-[100px] items-center gap-1.5 border-r border-[#efebe4] bg-[#fdfcfb] px-3"
-                  onClick={() => {
-                    setDobModeMenuOpen((current) => !current);
-                    setShowDobCalendar(false);
-                  }}
-                >
-                  <span className={cn("font-medium text-[#1a1a1a]", typography.body)}>{dobMode}</span>
-                  <ChevronDown
-                    className={cn(
-                      "h-4 w-4 text-[#8a8a8a] transition-transform",
-                      dobModeMenuOpen ? "rotate-180" : "",
-                    )}
-                  />
-                </button>
-
-                <button
-                  type="button"
-                  className={cn(
-                    "flex flex-1 items-center justify-between px-3 text-left",
-                    formattedDob ? "text-[#1a1a1a]" : "text-[#9c9c9c]",
-                    typography.body,
-                  )}
-                  onClick={() => {
-                    setShowDobCalendar((current) => !current);
-                    setDobModeMenuOpen(false);
-                  }}
-                >
-                  <span className="truncate">{formattedDob || "Specify the date of birth"}</span>
-                  <CalendarIcon className="h-4 w-4 text-[#8a8a8a] stroke-[1.8]" />
-                </button>
-              </div>
-
-              {dobModeMenuOpen ? (
-                <div className="absolute left-0 top-full z-30 mt-1 w-[200px] rounded-[8px] border border-[#efebe4] bg-white p-1 shadow-lg">
-                  {(["Gregorian", "Hijri"] as const).map((mode) => {
-                    const isSelected = dobMode === mode;
-
-                    return (
-                      <button
-                        key={mode}
-                        type="button"
-                        className="flex w-full items-center gap-2 rounded-[6px] px-2.5 py-2 text-left text-[13px] hover:bg-neutral-50"
-                        onClick={() => {
-                          setDobMode(mode);
-                          setDobModeMenuOpen(false);
-                        }}
-                      >
-                        <span
-                          className={cn(
-                            "flex h-4 w-4 items-center justify-center rounded-full border border-[#efebe4]",
-                            isSelected ? "border-black" : "",
-                          )}
-                        >
-                          {isSelected ? <span className="h-2 w-2 rounded-full bg-black" /> : null}
-                        </span>
-                        <span>{mode}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : null}
+              <button
+                type="button"
+                className={cn(
+                  "flex h-[36px] w-full items-center justify-between rounded-[7px] border border-[#efebe4] bg-white px-3 text-left text-[13px]",
+                  formattedDob ? "text-[#1a1a1a]" : "text-[#9c9c9c]",
+                  typography.body,
+                )}
+                onClick={() => {
+                  setShowDobCalendar((current) => !current);
+                  setDobModeMenuOpen(false);
+                }}
+              >
+                <span className="truncate">{closedDobPlaceholder}</span>
+                <CalendarIcon className="h-4 w-4 text-[#8a8a8a] stroke-[1.8]" />
+              </button>
 
               {showDobCalendar ? (
-                <div className="absolute right-0 top-full z-20 mt-1">
+                <div className="absolute left-1/2 top-full z-20 mt-1 w-full max-w-[294px] -translate-x-1/2 rounded-[8px] border border-[#efebe4] bg-white p-2 shadow-panel sm:left-auto sm:right-0 sm:w-auto sm:max-w-none sm:translate-x-0">
+                  <div className="mb-2 flex items-center gap-2">
+                    <button
+                      type="button"
+                      className="flex h-[30px] min-w-[104px] items-center gap-1.5 rounded-[6px] border border-[#efebe4] bg-white px-2.5 text-[12px] text-[#1a1a1a]"
+                      onClick={() => setDobModeMenuOpen((current) => !current)}
+                    >
+                      <span className="truncate">{dobMode}</span>
+                      <ChevronDown
+                        className={cn(
+                          "h-3.5 w-3.5 text-[#8a8a8a] transition-transform",
+                          dobModeMenuOpen ? "rotate-180" : "",
+                        )}
+                      />
+                    </button>
+                    <div className="flex h-[30px] min-w-0 flex-1 items-center justify-between rounded-[6px] border border-[#efebe4] px-2.5 text-[12px] text-[#9c9c9c]">
+                      <span className="truncate">{panelDobPlaceholder}</span>
+                      <CalendarIcon className="h-3.5 w-3.5 text-[#8a8a8a] stroke-[1.8]" />
+                    </div>
+                  </div>
+
+                  {dobModeMenuOpen ? (
+                    <div className="mb-2 rounded-[8px] border border-[#efebe4] bg-white p-1">
+                      {(["Gregorian", "Hijri"] as const).map((mode) => {
+                        const isSelected = dobMode === mode;
+
+                        return (
+                          <button
+                            key={mode}
+                            type="button"
+                            className="flex w-full items-center gap-2 rounded-[6px] px-2.5 py-2 text-left text-[13px] hover:bg-neutral-50"
+                            onClick={() => {
+                              setDobMode(mode);
+                              setDobModeMenuOpen(false);
+                            }}
+                          >
+                            <span
+                              className={cn(
+                                "flex h-4 w-4 items-center justify-center rounded-full border border-[#efebe4]",
+                                isSelected ? "border-black" : "",
+                              )}
+                            >
+                              {isSelected ? <span className="h-2 w-2 rounded-full bg-black" /> : null}
+                            </span>
+                            <span>{mode}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  ) : null}
+
                   <CalendarContent
                     selectedDate={selectedDob}
                     onSelect={(date) => {
                       setSelectedDob(date);
                       setShowDobCalendar(false);
+                      setDobModeMenuOpen(false);
                     }}
                   />
                 </div>
@@ -170,9 +175,9 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
             <FieldLabel>Identity or Residence</FieldLabel>
             <Input
               value={idNumber}
-              placeholder="Enter ID or residence number"
+              placeholder="Enter ID or residency number"
               className={cn(
-                "h-[32px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
+                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
                 typography.body,
               )}
               onChange={(event) => setIdNumber(sanitizeTextInput(event.target.value))}
@@ -194,7 +199,7 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
               value={phone}
               placeholder="Enter mobile number"
               className={cn(
-                "h-[32px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
+                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
                 typography.body,
               )}
               onChange={(event) => setPhone(sanitizePhoneInput(event.target.value))}
@@ -205,9 +210,9 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
             <FieldLabel>E-mail</FieldLabel>
             <Input
               value={email}
-              placeholder="Enter e-mail address"
+              placeholder="Enter email address"
               className={cn(
-                "h-[32px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
+                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
                 typography.body,
               )}
               onChange={(event) => setEmail(sanitizeTextInput(event.target.value))}
@@ -216,19 +221,19 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
 
           <div>
             <FieldLabel>Documents</FieldLabel>
-            <div className="flex flex-col items-center justify-center rounded-[8px] border border-dashed border-[#efebe4] bg-[#fdfcfb] px-4 py-3 text-center">
-              <div className="mb-2 flex h-8 w-8 items-center justify-center rounded-full bg-neutral-100">
-                <CloudUpload className="h-4 w-4 text-[#8a8a8a]" />
+            <div className="flex min-h-[170px] flex-col items-center justify-center rounded-[8px] border border-dashed border-[#efebe4] bg-[#fdfcfb] px-4 py-4 text-center">
+              <div className="mb-3 flex h-8 w-8 items-center justify-center rounded-[8px] border border-[#efebe4] bg-white">
+                <CloudUpload className="h-[18px] w-[18px] text-[#4a4a4a] stroke-[1.5]" />
               </div>
-              <p className={cn("mb-1 font-medium text-[#1a1a1a]", typography.body)}>Upload Documents</p>
-              <p className="mb-3 max-w-[220px] text-[11px] leading-[15px] text-[#6f6f6f]">
-                The files should be JPG, JPEG, PNG, or PDF. Maximum file size is 5 MB.
+              <p className={cn("mb-1 font-semibold text-[#1a1a1a]", typography.body)}>Upload Documents</p>
+              <p className="mb-4 max-w-[240px] text-[10px] leading-[15px] text-[#838383]">
+                The file size must be less than 30 MB, and it can be in PDF, Word, Excel, or image format
               </p>
               <Button
                 type="button"
                 variant="outline"
                 className={cn(
-                  "h-[28px] rounded-[6px] border-[#efebe4] px-3 text-[11px] font-medium",
+                  "h-[26px] rounded-[6px] border-[#efebe4] px-4 text-[11px] font-medium text-[#1a1a1a]",
                   typography.body,
                 )}
               >
@@ -237,18 +242,23 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
             </div>
           </div>
 
-          <div className="mt-1 flex items-center justify-end gap-2">
+          <div className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
             <Button
               type="button"
-              variant="outline"
-              className={cn("h-[30px] min-w-[66px] rounded-[6px] border-[#efebe4] px-3 font-medium", typography.body)}
+              className={cn(
+                "h-[34px] w-full min-w-[70px] rounded-[6px] bg-[#f2f2f2] px-4 font-medium text-[#1a1a1a] hover:bg-[#e5e5e5] sm:w-auto",
+                typography.body,
+              )}
               onClick={() => onOpenChange(false)}
             >
               Back
             </Button>
             <Button
               type="submit"
-              className={cn("h-[30px] min-w-[96px] rounded-[6px] bg-black px-3 font-medium text-white hover:bg-black/90", typography.body)}
+              className={cn(
+                "h-[34px] w-full min-w-[110px] rounded-[6px] bg-black px-4 font-medium text-white hover:bg-black/90 sm:w-auto",
+                typography.body,
+              )}
             >
               Save changes
             </Button>
