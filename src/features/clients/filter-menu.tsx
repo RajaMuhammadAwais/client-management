@@ -89,12 +89,15 @@ export function FilterMenu() {
 
         <DropdownMenuSub>
           <DropdownMenuSubTrigger
-            className={cn("min-h-[40px] cursor-pointer rounded-[8px] px-3 outline-none focus:bg-[#f3f3f3]", typography.body)}
+            className={cn(
+              "min-h-[40px] cursor-pointer rounded-[8px] px-3 outline-none focus:bg-[#f3f3f3]",
+              typography.body,
+            )}
           >
             Number of services
           </DropdownMenuSubTrigger>
           <DropdownMenuSubContent
-            className="w-[min(212px,calc(100vw-24px))] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
+            className="w-[min(268px,calc(100vw-24px))] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
             sideOffset={10}
           >
             <NumericalRangeSelector />
@@ -154,22 +157,6 @@ export function FilterMenu() {
           </DropdownMenuSubContent>
         </DropdownMenuSub>
 
-        <div className="my-1.5 border-t border-[#efebe4]" />
-
-        <DropdownMenuItem
-          className={cn(
-            "flex min-h-[40px] cursor-pointer items-center justify-end rounded-[8px] px-3 font-medium text-[#ff1f1f] outline-none hover:bg-red-50/50",
-            !hasActiveFilters && "pointer-events-none opacity-50",
-            typography.secondary,
-          )}
-          onSelect={() => {
-            setSelectedServices(new Set());
-            setRequestRange({});
-            setWorkingRange({});
-          }}
-        >
-          <span>Cancel all categories</span>
-        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

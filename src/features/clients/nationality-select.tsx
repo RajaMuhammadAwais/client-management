@@ -1,5 +1,5 @@
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { nationalities } from "@/features/clients/data";
 import { cn } from "@/lib/utils";
 import { typography } from "@/lib/typography";
@@ -8,9 +8,15 @@ interface NationalitySelectProps {
   value: string;
   onValueChange: (value: string) => void;
   placeholder?: string;
+  triggerRef?: RefObject<HTMLButtonElement | null>;
 }
 
-export function NationalitySelect({ value, onValueChange, placeholder }: NationalitySelectProps) {
+export function NationalitySelect({
+  value,
+  onValueChange,
+  placeholder,
+  triggerRef,
+}: NationalitySelectProps) {
   const [open, setOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -29,6 +35,7 @@ export function NationalitySelect({ value, onValueChange, placeholder }: Nationa
     <div ref={containerRef} className="relative">
       <button
         type="button"
+        ref={triggerRef}
         className={cn(
           "flex h-[32px] w-full items-center justify-between rounded-[7px] border border-[#efebe4] bg-white px-3 text-left outline-none transition-colors focus:border-black",
           !value ? "text-[#9c9c9c]" : "text-[#1a1a1a]",

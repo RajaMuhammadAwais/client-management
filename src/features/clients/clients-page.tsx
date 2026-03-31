@@ -1,7 +1,8 @@
 import { useState } from "react";
 import {
+  ArrowLeft,
+  ArrowRight,
   Bell,
-  ChevronLeft,
   ChevronRight,
   CircleAlert,
   CircleCheck,
@@ -54,34 +55,48 @@ function TopBar() {
 }
 
 function Pagination() {
+  const [currentPage, setCurrentPage] = useState(1);
+  const pages = [1, 2, 3, 4, 5];
+
   return (
-    <div className="mt-6 flex justify-center md:mt-8 md:justify-end">
-      <div className="flex max-w-full items-center overflow-x-auto rounded-[8px] border border-[#efebe4] bg-white">
-        <button
-          type="button"
-          className="flex h-9 w-9 items-center justify-center border-r border-[#efebe4] text-[#6f6f6f] hover:bg-neutral-50"
-        >
-          <ChevronLeft className="h-4 w-4 stroke-[2]" />
-        </button>
-        {[1, 2, 3, 4, 5].map((page) => (
+    <div className="mt-6 flex items-center justify-center gap-3 md:mt-8 md:justify-end">
+      {/* Page Numbers Box */}
+      <div className="flex items-center overflow-hidden rounded-[8px] border border-[#efebe4] bg-white">
+        {pages.map((page, i) => (
           <button
             key={page}
             type="button"
-            aria-current={page === 3 ? "page" : undefined}
+            onClick={() => setCurrentPage(page)}
+            aria-current={currentPage === page ? "page" : undefined}
             className={cn(
-              "flex h-9 w-9 items-center justify-center border-r border-[#efebe4] font-medium transition-colors",
+              "flex h-9 w-9 items-center justify-center font-medium transition-colors hover:bg-neutral-50",
+              i !== pages.length - 1 && "border-r border-[#efebe4]",
+              currentPage === page ? "bg-neutral-50 text-black" : "text-[#6f6f6f]",
               typography.body,
-              page === 3 ? "bg-neutral-50 text-black" : "text-[#6f6f6f] hover:bg-neutral-50",
             )}
           >
             {page}
           </button>
         ))}
+      </div>
+
+      {/* Navigation Arrows Box */}
+      <div className="flex items-center overflow-hidden rounded-[8px] border border-[#efebe4] bg-white">
+        <button
+          type="button"
+          className="flex h-9 w-9 items-center justify-center border-r border-[#efebe4] text-[#6f6f6f] hover:bg-neutral-50"
+          aria-label="Previous page"
+          onClick={() => setCurrentPage((prev: number) => Math.max(1, prev - 1))}
+        >
+          <ArrowLeft className="h-4 w-4 stroke-[2]" />
+        </button>
         <button
           type="button"
           className="flex h-9 w-9 items-center justify-center text-[#6f6f6f] hover:bg-neutral-50"
+          aria-label="Next page"
+          onClick={() => setCurrentPage((prev: number) => Math.min(pages.length, prev + 1))}
         >
-          <ChevronRight className="h-4 w-4 stroke-[2]" />
+          <ArrowRight className="h-4 w-4 stroke-[2]" />
         </button>
       </div>
     </div>
