@@ -1,4 +1,4 @@
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Calendar as CalendarIcon, ChevronDown, CloudUpload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -33,6 +33,35 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
   const [selectedDob, setSelectedDob] = useState<Date | undefined>(undefined);
   const [dobModeMenuOpen, setDobModeMenuOpen] = useState(false);
   const [dobMode, setDobMode] = useState<"Gregorian" | "Hijri">("Gregorian");
+  const formRef = useRef<HTMLFormElement>(null);
+  const clientNameRef = useRef<HTMLInputElement>(null);
+  const idNumberRef = useRef<HTMLInputElement>(null);
+  const phoneRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const dobButtonRef = useRef<HTMLButtonElement>(null);
+  const dobModeMenuRef = useRef<HTMLDivElement>(null);
+  const calendarRef = useRef<HTMLDivElement>(null);
+  const nationalityButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        showDobCalendar &&
+        calendarRef.current &&
+        !calendarRef.current.contains(event.target as Node) &&
+        dobButtonRef.current &&
+        !dobButtonRef.current.contains(event.target as Node)
+      ) {
+        setShowDobCalendar(false);
+        setDobModeMenuOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showDobCalendar]);
 
   useEffect(() => {
     if (!open) {
@@ -55,9 +84,108 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
   const closedDobPlaceholder = formattedDob || "Select date of birth";
   const panelDobPlaceholder = formattedDob || "Specify the date of birth";
 
+  function validateClientName(value: string) {
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue) {
+      return "Client name is required.";
+    }
+
+    if (trimmedValue.length < 2) {
+      return "Client name must be at least 2 characters.";
+    }
+
+    if (!/[A-Za-z]/.test(trimmedValue)) {
+      return "Client name must include letters.";
+    }
+
+    return "";
+  }
+
+  function validateIdNumber(value: string) {
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue) {
+      return "";
+    }
+
+    if (!/^[A-Za-z0-9 -]+$/.test(trimmedValue)) {
+      return "Identity or residence must contain only letters, numbers, spaces, or hyphens.";
+    }
+
+    if (trimmedValue.length < 6 || trimmedValue.length > 20) {
+      return "Identity or residence must be between 6 and 20 characters.";
+    }
+
+    return "";
+  }
+
+  function validatePhone(value: string) {
+    const trimmedValue = value.trim();
+
+    if (!trimmedValue) {
+      return "";
+    }
+
+    const digitsOnly = trimmedValue.replace(/\D/g, "");
+
+    if (digitsOnly.length < 8 || digitsOnly.length > 15) {
+      return "Mobile number must contain between 8 and 15 digits.";
+    }
+
+    return "";
+  }
+
+  function validateDob(value?: Date) {
+    if (!value) {
+      return "";
+    }
+
+    if (value > new Date()) {
+      return "Date of birth cannot be in the future.";
+    }
+
+    return "";
+  }
+
+  function clearCustomValidity(element: HTMLInputElement | HTMLButtonElement | null) {
+    element?.setCustomValidity("");
+  }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    onSubmit(clientName.trim() ? "success" : "error");
+
+    const clientNameMessage = validateClientName(clientName);
+    const idNumberMessage = validateIdNumber(idNumber);
+    const phoneMessage = validatePhone(phone);
+    const dobMessage = validateDob(selectedDob);
+
+    clientNameRef.current?.setCustomValidity(clientNameMessage);
+    idNumberRef.current?.setCustomValidity(idNumberMessage);
+    phoneRef.current?.setCustomValidity(phoneMessage);
+    dobButtonRef.current?.setCustomValidity(dobMessage);
+    nationalityButtonRef.current?.setCustomValidity("");
+    emailRef.current?.setCustomValidity("");
+
+    const firstInvalidControl =
+      (clientNameMessage && clientNameRef.current) ||
+      (dobMessage && dobButtonRef.current) ||
+      (idNumberMessage && idNumberRef.current) ||
+      (phoneMessage && phoneRef.current) ||
+      null;
+
+    if (firstInvalidControl) {
+      onSubmit("error");
+      firstInvalidControl.reportValidity();
+      return;
+    }
+
+    if (!formRef.current?.reportValidity()) {
+      onSubmit("error");
+      return;
+    }
+
+    onSubmit("success");
     onOpenChange(false);
   }
 
@@ -73,17 +201,25 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
           Form to add a new client with their details and documents.
         </DialogDescription>
 
-        <form className="mt-4 flex flex-1 flex-col gap-[16px] overflow-visible" onSubmit={handleSubmit}>
+        <form ref={formRef} className="mt-4 flex flex-1 flex-col gap-[16px] overflow-visible" onSubmit={handleSubmit}>
           <div>
             <FieldLabel required>Client name</FieldLabel>
             <Input
+              ref={clientNameRef}
               value={clientName}
+              required
+              minLength={2}
+              maxLength={80}
+              autoComplete="name"
               placeholder="Enter Client name"
               className={cn(
-                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
+                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px] focus-visible:ring-0",
                 typography.body,
               )}
-              onChange={(event) => setClientName(sanitizeTextInput(event.target.value))}
+              onChange={(event) => {
+                clearCustomValidity(clientNameRef.current);
+                setClientName(sanitizeTextInput(event.target.value));
+              }}
             />
           </div>
 
@@ -92,6 +228,7 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
             <div className="relative">
               <button
                 type="button"
+                ref={dobButtonRef}
                 className={cn(
                   "flex h-[36px] w-full items-center justify-between rounded-[7px] border border-[#efebe4] bg-white px-3 text-left text-[13px]",
                   formattedDob ? "text-[#1a1a1a]" : "text-[#9c9c9c]",
@@ -107,7 +244,7 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
               </button>
 
               {showDobCalendar ? (
-                <div className="absolute left-1/2 top-full z-20 mt-1 w-full max-w-[294px] -translate-x-1/2 rounded-[8px] border border-[#efebe4] bg-white p-2 shadow-panel sm:left-auto sm:right-0 sm:w-auto sm:max-w-none sm:translate-x-0">
+                <div ref={calendarRef} className="absolute left-1/2 top-full z-20 mt-1 w-full max-w-[294px] -translate-x-1/2 rounded-[8px] border border-[#efebe4] bg-white p-2 shadow-panel sm:left-auto sm:right-0 sm:w-auto sm:max-w-none sm:translate-x-0">
                   <div className="mb-2 flex items-center gap-2">
                     <button
                       type="button"
@@ -161,6 +298,7 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
                   <CalendarContent
                     selectedDate={selectedDob}
                     onSelect={(date) => {
+                      clearCustomValidity(dobButtonRef.current);
                       setSelectedDob(date);
                       setShowDobCalendar(false);
                       setDobModeMenuOpen(false);
@@ -174,13 +312,19 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
           <div>
             <FieldLabel>Identity or Residence</FieldLabel>
             <Input
+              ref={idNumberRef}
               value={idNumber}
+              maxLength={20}
+              autoComplete="off"
               placeholder="Enter ID or residency number"
               className={cn(
-                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
+                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px] focus-visible:ring-0",
                 typography.body,
               )}
-              onChange={(event) => setIdNumber(sanitizeTextInput(event.target.value))}
+              onChange={(event) => {
+                clearCustomValidity(idNumberRef.current);
+                setIdNumber(sanitizeTextInput(event.target.value));
+              }}
             />
           </div>
 
@@ -190,32 +334,47 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
               value={nationality}
               onValueChange={setNationality}
               placeholder="Select nationality"
+              triggerRef={nationalityButtonRef}
             />
           </div>
 
           <div>
             <FieldLabel>Mobile number</FieldLabel>
             <Input
+              ref={phoneRef}
               value={phone}
+              type="tel"
+              inputMode="tel"
+              autoComplete="tel"
               placeholder="Enter mobile number"
               className={cn(
-                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
+                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px] focus-visible:ring-0",
                 typography.body,
               )}
-              onChange={(event) => setPhone(sanitizePhoneInput(event.target.value))}
+              onChange={(event) => {
+                clearCustomValidity(phoneRef.current);
+                setPhone(sanitizePhoneInput(event.target.value));
+              }}
             />
           </div>
 
           <div>
             <FieldLabel>E-mail</FieldLabel>
             <Input
+              ref={emailRef}
               value={email}
+              type="email"
+              maxLength={254}
+              autoComplete="email"
               placeholder="Enter email address"
               className={cn(
-                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px]",
+                "h-[36px] rounded-[7px] border-[#efebe4] px-3 text-[13px] placeholder:text-[12px] focus-visible:ring-0",
                 typography.body,
               )}
-              onChange={(event) => setEmail(sanitizeTextInput(event.target.value))}
+              onChange={(event) => {
+                clearCustomValidity(emailRef.current);
+                setEmail(sanitizeTextInput(event.target.value));
+              }}
             />
           </div>
 

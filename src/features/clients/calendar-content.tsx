@@ -26,7 +26,7 @@ const MONTHS = [
   "December",
 ];
 
-const WEEKDAY_LABELS = ["Are", "For", "You", "We", "Th", "Fr", "on"];
+const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
 
 export function CalendarContent({
   startDate,
