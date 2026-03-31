@@ -1,5 +1,5 @@
 import { Check, ChevronDown, ChevronUp } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { nationalities } from "@/features/clients/data";
 import { cn } from "@/lib/utils";
 import { typography } from "@/lib/typography";
@@ -12,9 +12,21 @@ interface NationalitySelectProps {
 
 export function NationalitySelect({ value, onValueChange, placeholder }: NationalitySelectProps) {
   const [open, setOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handlePointerDown(event: MouseEvent) {
+      if (!containerRef.current?.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handlePointerDown);
+    return () => document.removeEventListener("mousedown", handlePointerDown);
+  }, []);
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       <button
         type="button"
         className={cn(
@@ -23,6 +35,13 @@ export function NationalitySelect({ value, onValueChange, placeholder }: Nationa
           typography.body,
         )}
         onClick={() => setOpen((current) => !current)}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") {
+            setOpen(false);
+          }
+        }}
+        aria-expanded={open}
+        aria-haspopup="listbox"
       >
         <span className="truncate text-[13px]">{value || placeholder || "Select nationality"}</span>
         {open ? (
@@ -33,7 +52,10 @@ export function NationalitySelect({ value, onValueChange, placeholder }: Nationa
       </button>
 
       {open ? (
-        <div className="absolute top-full z-[100] mt-1 max-h-[168px] w-full overflow-y-auto rounded-[8px] border border-[#efebe4] bg-white p-1 shadow-lg">
+        <div
+          className="absolute top-full z-[100] mt-1 max-h-[168px] w-full overflow-y-auto rounded-[8px] border border-[#efebe4] bg-white p-1 shadow-lg"
+          role="listbox"
+        >
           {nationalities.map((nationality) => {
             const isSelected = value === nationality;
 
@@ -47,6 +69,8 @@ export function NationalitySelect({ value, onValueChange, placeholder }: Nationa
                     ? "bg-[#f3f3f3] font-medium text-[#1a1a1a]"
                     : "text-[#1a1a1a] hover:bg-neutral-50",
                 )}
+                role="option"
+                aria-selected={isSelected}
                 onClick={() => {
                   onValueChange(nationality);
                   setOpen(false);
