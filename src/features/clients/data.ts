@@ -59,7 +59,7 @@ export const nationalities = [
 ];
 
 export const brandIcon = Scale;
-export const currentUserName = "Ahmed";
+export const currentUserName = "Raja Muhammad Awais";
 
 export const statusMessages = {
   success: "The client was successfully added",
