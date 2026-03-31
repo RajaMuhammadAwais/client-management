@@ -22,7 +22,7 @@ const MONTHS = [
   "December",
 ];
 
-const WEEKDAY_LABELS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
+const WEEKDAY_LABELS = ["on", "Fr", "Th", "We", "You", "For", "Are"];
 
 export function CalendarContent({ selectedDate, onSelect }: CalendarProps) {
   const [viewDate, setViewDate] = useState(selectedDate || new Date(2025, 3, 1));
@@ -50,6 +50,7 @@ export function CalendarContent({ selectedDate, onSelect }: CalendarProps) {
     const firstDay = startDayOfMonth(viewYear, viewMonth);
     const previousMonthTotal = prevMonthDays(viewYear, viewMonth);
 
+    // Padding for previous month
     for (let index = firstDay - 1; index >= 0; index -= 1) {
       days.push(
         <div
@@ -132,7 +133,7 @@ export function CalendarContent({ selectedDate, onSelect }: CalendarProps) {
         </button>
       </div>
 
-      <div className="grid grid-cols-7 gap-y-1">
+      <div className="grid grid-cols-7 gap-y-1" dir="rtl">
         {WEEKDAY_LABELS.map((day) => (
           <div key={day} className="flex h-8 w-8 items-center justify-center text-[12px] text-[#8a8a8a]">
             {day}

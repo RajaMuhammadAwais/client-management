@@ -15,8 +15,8 @@ export function ClientBottomNav() {
             active ? "bg-black text-white" : "text-[#4a4a4a] hover:bg-neutral-50",
           )}
         >
-          <span>{label}</span>
           <Icon className="h-[18px] w-[18px] stroke-[1.8]" />
+          <span>{label}</span>
         </button>
       ))}
     </nav>

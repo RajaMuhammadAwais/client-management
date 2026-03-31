@@ -49,7 +49,7 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
   }, [open]);
 
   const formattedDob = selectedDob
-    ? `${String(selectedDob.getDate()).padStart(2, "0")}/${String(selectedDob.getMonth() + 1).padStart(2, "0")}/${selectedDob.getFullYear()}`
+    ? `${String(selectedDob.getDate()).padStart(2, "0")}-${String(selectedDob.getMonth() + 1).padStart(2, "0")}-${selectedDob.getFullYear()}`
     : "";
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
@@ -117,13 +117,13 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
                     setDobModeMenuOpen(false);
                   }}
                 >
-                  <span className="truncate">{formattedDob || "Select date of birth"}</span>
+                  <span className="truncate">{formattedDob || "Specify the date of birth"}</span>
                   <CalendarIcon className="h-4 w-4 text-[#8a8a8a] stroke-[1.8]" />
                 </button>
               </div>
 
               {dobModeMenuOpen ? (
-                <div className="absolute left-0 top-full z-30 mt-1 w-[132px] rounded-[8px] border border-[#efebe4] bg-white p-1 shadow-lg">
+                <div className="absolute left-0 top-full z-30 mt-1 w-[200px] rounded-[8px] border border-[#efebe4] bg-white p-1 shadow-lg">
                   {(["Gregorian", "Hijri"] as const).map((mode) => {
                     const isSelected = dobMode === mode;
 

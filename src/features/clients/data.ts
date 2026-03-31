@@ -16,7 +16,7 @@ import {
   UsersRound,
 } from "lucide-react";
 
-export const breadcrumbText = "Legal Project Management";
+export const breadcrumbText = "Legal Project Managamnst";
 export const pageTitle = "Employees";
 
 export const sidebarItems: LucideIcon[] = [
