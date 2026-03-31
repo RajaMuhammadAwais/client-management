@@ -63,4 +63,13 @@
   .shadow-nav {
     box-shadow: var(--shadow-nav);
   }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none; /* WebKit */
+  }
 }
