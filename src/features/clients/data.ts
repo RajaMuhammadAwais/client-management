@@ -63,5 +63,5 @@ export const currentUserName = "Ahmed";
 
 export const statusMessages = {
   success: "The client was successfully added",
-  error: "Failed to add customer",
+  error: "Failed to add client",
 } as const;

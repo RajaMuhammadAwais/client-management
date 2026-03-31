@@ -31,8 +31,6 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
   const [email, setEmail] = useState("");
   const [showDobCalendar, setShowDobCalendar] = useState(false);
   const [selectedDob, setSelectedDob] = useState<Date | undefined>(undefined);
-  const [dobModeMenuOpen, setDobModeMenuOpen] = useState(false);
-  const [dobMode, setDobMode] = useState<"Gregorian" | "Hijri">("Gregorian");
 
   useEffect(() => {
     if (!open) {
@@ -43,8 +41,6 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
       setEmail("");
       setShowDobCalendar(false);
       setSelectedDob(undefined);
-      setDobModeMenuOpen(false);
-      setDobMode("Gregorian");
     }
   }, [open]);
 
@@ -87,70 +83,20 @@ export function AddClientDialog({ open, onOpenChange, onSubmit }: AddClientDialo
           <div>
             <FieldLabel>Date of birth</FieldLabel>
             <div className="relative">
-              <div className="flex h-[32px] w-full items-center rounded-[7px] border border-[#efebe4] bg-white text-[13px]">
-                <button
-                  type="button"
-                  className="flex h-full min-w-[100px] items-center gap-1.5 border-r border-[#efebe4] bg-[#fdfcfb] px-3"
-                  onClick={() => {
-                    setDobModeMenuOpen((current) => !current);
-                    setShowDobCalendar(false);
-                  }}
-                >
-                  <span className={cn("font-medium text-[#1a1a1a]", typography.body)}>{dobMode}</span>
-                  <ChevronDown
-                    className={cn(
-                      "h-4 w-4 text-[#8a8a8a] transition-transform",
-                      dobModeMenuOpen ? "rotate-180" : "",
-                    )}
-                  />
-                </button>
-
-                <button
-                  type="button"
-                  className={cn(
-                    "flex flex-1 items-center justify-between px-3 text-left",
-                    formattedDob ? "text-[#1a1a1a]" : "text-[#9c9c9c]",
-                    typography.body,
-                  )}
-                  onClick={() => {
-                    setShowDobCalendar((current) => !current);
-                    setDobModeMenuOpen(false);
-                  }}
-                >
-                  <span className="truncate">{formattedDob || "Select date of birth"}</span>
-                  <CalendarIcon className="h-4 w-4 text-[#8a8a8a] stroke-[1.8]" />
-                </button>
-              </div>
-
-              {dobModeMenuOpen ? (
-                <div className="absolute left-0 top-full z-30 mt-1 w-[132px] rounded-[8px] border border-[#efebe4] bg-white p-1 shadow-lg">
-                  {(["Gregorian", "Hijri"] as const).map((mode) => {
-                    const isSelected = dobMode === mode;
-
-                    return (
-                      <button
-                        key={mode}
-                        type="button"
-                        className="flex w-full items-center gap-2 rounded-[6px] px-2.5 py-2 text-left text-[13px] hover:bg-neutral-50"
-                        onClick={() => {
-                          setDobMode(mode);
-                          setDobModeMenuOpen(false);
-                        }}
-                      >
-                        <span
-                          className={cn(
-                            "flex h-4 w-4 items-center justify-center rounded-full border border-[#efebe4]",
-                            isSelected ? "border-black" : "",
-                          )}
-                        >
-                          {isSelected ? <span className="h-2 w-2 rounded-full bg-black" /> : null}
-                        </span>
-                        <span>{mode}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              ) : null}
+              <button
+                type="button"
+                className={cn(
+                  "flex h-[32px] w-full items-center justify-between rounded-[7px] border border-[#efebe4] bg-white px-3 text-[13px]",
+                  formattedDob ? "text-[#1a1a1a]" : "text-[#9c9c9c]",
+                  typography.body,
+                )}
+                onClick={() => {
+                  setShowDobCalendar((current) => !current);
+                }}
+              >
+                <span className="truncate">{formattedDob || "Select date of birth"}</span>
+                <CalendarIcon className="h-4 w-4 text-[#8a8a8a] stroke-[1.8]" />
+              </button>
 
               {showDobCalendar ? (
                 <div className="absolute right-0 top-full z-20 mt-1">

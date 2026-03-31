@@ -31,13 +31,13 @@ export function FilterMenu() {
   }
 
   return (
-    <DropdownMenu dir="rtl">
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
           variant="outline"
           size="sm"
           className={cn(
-            "h-[36px] min-w-[110px] flex-row-reverse gap-2.5 rounded-[8px] border-[#efebe4] px-4 font-medium text-[#1a1a1a] hover:bg-neutral-50",
+            "h-[36px] min-w-[110px] gap-2.5 rounded-[8px] border-[#efebe4] px-4 font-medium text-[#1a1a1a] hover:bg-neutral-50",
             typography.body,
           )}
         >
@@ -53,7 +53,7 @@ export function FilterMenu() {
           >
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
-          <span>Filter</span>
+          <span>filtering</span>
         </Button>
       </DropdownMenuTrigger>
 
