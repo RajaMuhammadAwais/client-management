@@ -19,6 +19,8 @@ import { NumericalRangeSelector } from "./numerical-range-selector";
 
 export function FilterMenu() {
   const [selectedServices, setSelectedServices] = useState<Set<string>>(new Set(["Meetings"]));
+  const [requestRange, setRequestRange] = useState<{ start?: Date; end?: Date }>({});
+  const [workingRange, setWorkingRange] = useState<{ start?: Date; end?: Date }>({});
 
   function toggleService(service: string) {
     const next = new Set(selectedServices);
@@ -73,8 +75,12 @@ export function FilterMenu() {
             sideOffset={10}
           >
             <div className="flex flex-col gap-3" dir="rtl">
-              <DateRangePicker />
-              <CalendarContent />
+              <DateRangePicker startDate={requestRange.start} endDate={requestRange.end} />
+              <CalendarContent
+                startDate={requestRange.start}
+                endDate={requestRange.end}
+                onSelectRange={(range) => setRequestRange(range)}
+              />
             </div>
           </DropdownMenuSubContent>
         </DropdownMenuSub>
@@ -136,8 +142,12 @@ export function FilterMenu() {
             sideOffset={10}
           >
             <div className="flex flex-col gap-3" dir="rtl">
-              <DateRangePicker />
-              <CalendarContent />
+              <DateRangePicker startDate={workingRange.start} endDate={workingRange.end} />
+              <CalendarContent
+                startDate={workingRange.start}
+                endDate={workingRange.end}
+                onSelectRange={(range) => setWorkingRange(range)}
+              />
             </div>
           </DropdownMenuSubContent>
         </DropdownMenuSub>

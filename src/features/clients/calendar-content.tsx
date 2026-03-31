@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface CalendarProps {
+  startDate?: Date;
+  endDate?: Date;
+  onSelectRange?: (range: { start?: Date; end?: Date }) => void;
+  // For backwards compatibility in AddClientDialog
   selectedDate?: Date;
   onSelect?: (date: Date) => void;
 }
@@ -22,16 +26,24 @@ const MONTHS = [
   "December",
 ];
 
-const WEEKDAY_LABELS = ["on", "Fr", "Th", "We", "You", "For", "Are"];
+const WEEKDAY_LABELS = ["Sa", "Fr", "Th", "We", "Tu", "Mo", "Su"];
 
-export function CalendarContent({ selectedDate, onSelect }: CalendarProps) {
-  const [viewDate, setViewDate] = useState(selectedDate || new Date(2025, 3, 1));
+export function CalendarContent({
+  startDate,
+  endDate,
+  onSelectRange,
+  selectedDate,
+  onSelect,
+}: CalendarProps) {
+  const [viewDate, setViewDate] = useState(startDate || selectedDate || new Date(2025, 5, 1)); // Default to June 2025 like screenshot
 
   useEffect(() => {
-    if (selectedDate) {
+    if (startDate) {
+      setViewDate(startDate);
+    } else if (selectedDate) {
       setViewDate(selectedDate);
     }
-  }, [selectedDate]);
+  }, [startDate, selectedDate]);
 
   const viewYear = viewDate.getFullYear();
   const viewMonth = viewDate.getMonth();
@@ -64,16 +76,39 @@ export function CalendarContent({ selectedDate, onSelect }: CalendarProps) {
 
     for (let day = 1; day <= totalDays; day += 1) {
       const date = new Date(viewYear, viewMonth, day);
-      const isSelected = selectedDate?.toDateString() === date.toDateString();
+      const isSelected =
+        selectedDate?.toDateString() === date.toDateString() ||
+        startDate?.toDateString() === date.toDateString() ||
+        endDate?.toDateString() === date.toDateString();
+
+      const isInRange =
+        startDate &&
+        endDate &&
+        date > (startDate < endDate ? startDate : endDate) &&
+        date < (startDate < endDate ? endDate : startDate);
+
+      function handleSelect() {
+        if (onSelectRange) {
+          if (!startDate || (startDate && endDate)) {
+            onSelectRange({ start: date, end: undefined });
+          } else {
+            // Second click
+            onSelectRange({ start: startDate, end: date });
+          }
+        } else {
+          onSelect?.(date);
+        }
+      }
 
       days.push(
         <button
           key={day}
           type="button"
-          onClick={() => onSelect?.(date)}
+          onClick={handleSelect}
           className={cn(
-            "flex h-8 w-8 items-center justify-center rounded-[8px] text-[12px] transition-colors",
+            "flex h-8 w-8 items-center justify-center rounded-[8px] text-[12px] transition-colors relative",
             isSelected ? "bg-[#1a1a1a] text-white" : "text-[#1a1a1a] hover:bg-neutral-50",
+            isInRange && !isSelected ? "bg-[#f3f3f3]" : "",
           )}
         >
           {day}
