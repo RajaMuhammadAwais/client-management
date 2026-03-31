@@ -27,7 +27,7 @@ export function ClientsTable() {
               </div>
             </TableHead>
             <TableHead className={cn("w-[14%] font-semibold text-[#1a1a1a]", typography.body)}>Date of last request</TableHead>
-            <TableHead className={cn("w-[13%] pr-4 font-semibold text-[#1a1a1a]", typography.body)}>Assigned to</TableHead>
+            <TableHead className={cn("w-[13%] pr-4 font-semibold text-[#1a1a1a]", typography.body)}>A specific to</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

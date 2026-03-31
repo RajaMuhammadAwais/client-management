@@ -41,6 +41,7 @@ export function FilterMenu() {
             typography.body,
           )}
         >
+          <span>Filter</span>
           <svg
             width="18"
             height="18"
@@ -53,7 +54,6 @@ export function FilterMenu() {
           >
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
-          <span>filtering</span>
         </Button>
       </DropdownMenuTrigger>
 
@@ -72,7 +72,7 @@ export function FilterMenu() {
             className="w-[326px] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
             sideOffset={10}
           >
-            <div className="flex flex-col gap-3" dir="ltr">
+            <div className="flex flex-col gap-3" dir="rtl">
               <DateRangePicker />
               <CalendarContent />
             </div>
@@ -115,11 +115,11 @@ export function FilterMenu() {
                   toggleService(service);
                 }}
               >
+                <span className="text-[13px]">{service}</span>
                 <Checkbox
                   checked={selectedServices.has(service)}
                   className="h-[18px] w-[18px] rounded-[5px] border-[#efebe4] data-[state=checked]:border-black data-[state=checked]:bg-black"
                 />
-                <span className="text-right text-[13px]">{service}</span>
               </DropdownMenuItem>
             ))}
           </DropdownMenuSubContent>
@@ -135,7 +135,7 @@ export function FilterMenu() {
             className="w-[326px] rounded-[10px] border-[#efebe4] p-3 shadow-xl"
             sideOffset={10}
           >
-            <div className="flex flex-col gap-3" dir="ltr">
+            <div className="flex flex-col gap-3" dir="rtl">
               <DateRangePicker />
               <CalendarContent />
             </div>

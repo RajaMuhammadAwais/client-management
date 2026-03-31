@@ -16,7 +16,7 @@ import {
   UsersRound,
 } from "lucide-react";
 
-export const breadcrumbText = "Legal Project Management";
+export const breadcrumbText = "Legal Project Managamnst";
 export const pageTitle = "Employees";
 
 export const sidebarItems: LucideIcon[] = [
@@ -63,5 +63,5 @@ export const currentUserName = "Ahmed";
 
 export const statusMessages = {
   success: "The client was successfully added",
-  error: "Failed to add client",
+  error: "Failed to add customer",
 } as const;

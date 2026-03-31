@@ -63,12 +63,6 @@ function Pagination() {
           type="button"
           className="flex h-9 w-9 items-center justify-center border-l border-[#efebe4] text-[#6f6f6f] hover:bg-neutral-50"
         >
-          <ChevronLeft className="h-4 w-4 stroke-[2]" />
-        </button>
-        <button
-          type="button"
-          className="flex h-9 w-9 items-center justify-center text-[#6f6f6f] hover:bg-neutral-50"
-        >
           <ChevronRight className="h-4 w-4 stroke-[2]" />
         </button>
       </div>
